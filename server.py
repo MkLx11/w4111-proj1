@@ -377,10 +377,17 @@ def rate_and_review():
     return render_template('rate_and_review.html', reviews=reviews)
 
 
+def is_valid_number(s):
+    """Check if the string s can be converted to a float."""
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 @app.route('/get-recommendations', methods=['POST'])
 def get_recommendations():
     destination = request.form['destination'].lower()
-    budget = float(request.form['budget'])  # Ensure budget is treated as a float
+    budget = float(request.form['budget']) if is_valid_number(request.form['budget']) else 0 # Ensure budget is treated as a float
     duration = int(request.form['duration'])
 
     # Format the budget as a string with two decimal places
