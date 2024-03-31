@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <title>Itineraries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+        .itinerary {
+            border: 1px solid #ddd;
+            margin: 10px auto;
+            padding: 10px;
+            width: 60%;
+        }
+        input[type="text"], input[type="date"], input[type="number"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Itineraries</h1>
+        <h2>Create New Itinerary</h2>
+        <form method="POST" action="/view-itinerary">
+        	    <input type="number" name="itinerary_id" required placeholder="Itinerary ID">
+            <input type="date" name="start_date" required placeholder="Start Date">
+            <input type="date" name="end_date" required placeholder="End Date">
+            <input type="number" name="budget" required placeholder="Budget">
+            <button type="submit">Create Itinerary</button>
+        </form>
+
+        <h2>Existing Itineraries</h2>
+        {% if itineraries %}
+            <ul>
+                {% for itinerary in itineraries %}
+                    <li>
+                        <strong>Itinerary ID:</strong> {{ itinerary.itinerary_id }},
+                        <strong>Start Date:</strong> {{ itinerary.start_date }},
+                        <strong>End Date:</strong> {{ itinerary.end_date }},
+                        <strong>Budget:</strong> {{ itinerary.budget }},
+                         <strong>Flight:</strong> {{ itinerary.flight_id }},
+                         <strong>Accommodation:</strong> {{ itinerary.name }},
+                         <strong>Activity:</strong> {{ itinerary.activity_name }},
+                        <strong>Managed By:</strong> {{ itinerary.agency_name }} ({{ itinerary.agency_email }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No itineraries found.</p>
+        {% endif %}
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>    
