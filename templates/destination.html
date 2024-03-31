@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Destination Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        h2 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if destination %}
+            <h1>{{ destination['name'] }}</h1>
+            <p><strong>Airport:</strong> {{ destination['airport'] }}</p>
+            <p><strong>Description:</strong> {{ destination['description'] }}</p>
+
+            <div class="section">
+                <h2>Flights to {{ destination['name'] }}</h2>
+                {% if flights %}
+                    {% for flight in flights %}
+                        <div class="item">
+                            Airline: {{ flight['airline'] }}, Flgiht ID: {{flight['flight_id']}}, Departure Time:{{flight['departure_time']}}, Origin: {{flight['origin']}}, Arrival Time: {{flight['arrival_time']}}, Price: {{ flight['price'] }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No flights found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>Accommodations in {{ destination['name'] }}</h2>
+                {% if accommodations %}
+                    {% for accommodation in accommodations %}
+                        <div class="item">
+                            Name: {{ accommodation['name'] }}, Type: {{accommodation['type']}}, Price: {{ accommodation['price'] }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No accommodations found.</p>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>Activities in {{ destination['name'] }}</h2>
+                {% if activities %}
+                    {% for activity in activities %}
+                        <div class="item">
+                            Activity: {{ activity['name'] }}, Type: {{ activity['type'] }}, Price:{{activity['price']}}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No activities found.</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>Destination not found. Please try again.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Everywhere You Go</title>
+    <style>
+        /* Your styles */
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: auto; text-align: center; }
+        input[type="text"], input[type="number"] { padding: 10px; margin: 10px 0; width: 300px; display: block; margin-left: auto; margin-right: auto; }
+        input[type="submit"], button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Everywhere You Go</h1>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <form action="{{ url_for('search_destination') }}" method="get">
+            <input type="text" name="destination" placeholder="Search for a destination...">
+            <input type="submit" value="Search">
+        </form>
+        <button onclick="window.location.href='{{ url_for('view_itinerary') }}';">View Itineraries</button>
+        <button onclick="window.location.href='{{ url_for('rate_and_review') }}';">Rate and Review</button>
+        <form action="{{ url_for('get_recommendations') }}" method="post">
+            <input type="text" name="destination" placeholder="Your Destination">
+            <input type="number" name="budget" placeholder="Your Budget">
+            <input type="number" name="duration" placeholder="Duration in Days">
+            <input type="submit" value="Get Recommendations">
+        </form>
+    </div>
+</body>
+</html>
+
