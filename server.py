@@ -94,110 +94,11 @@ def teardown_request(exception):
 		pass
 
 
-#
-# @app.route is a decorator around index() that means:
-#   run index() whenever the user tries to access the "/" path using a GET request
-#
-# If you wanted the user to go to, for example, localhost:8111/foobar/ with POST or GET then you could use:
-#
-#       @app.route("/foobar/", methods=["POST", "GET"])
-#
-# PROTIP: (the trailing / in the path is important)
-# 
-# see for routing: https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing
-# see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-#
-'''@app.route('/')
-def index():
-	"""
-	request is a special object that Flask provides to access web request information:
-
-	request.method:   "GET" or "POST"
-	request.form:     if the browser submitted a form, this contains the data in the form
-	request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
-
-	See its API: https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data
-	"""
-
-	# DEBUG: this is debugging code to see what request looks like
-	print(request.args)
-
-
-	#
-	# example of a database query
-	#
-	select_query = "SELECT name from test"
-	cursor = g.conn.execute(text(select_query))
-	names = []
-	for result in cursor:
-		names.append(result[0])
-	cursor.close()
-
-	#
-	# Flask uses Jinja templates, which is an extension to HTML where you can
-	# pass data to a template and dynamically generate HTML based on the data
-	# (you can think of it as simple PHP)
-	# documentation: https://realpython.com/primer-on-jinja-templating/
-	#
-	# You can see an example template in templates/index.html
-	#
-	# context are the variables that are passed to the template.
-	# for example, "data" key in the context variable defined below will be 
-	# accessible as a variable in index.html:
-	#
-	#     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-	#     <div>{{data}}</div>
-	#     
-	#     # creates a <div> tag for each element in data
-	#     # will print: 
-	#     #
-	#     #   <div>grace hopper</div>
-	#     #   <div>alan turing</div>
-	#     #   <div>ada lovelace</div>
-	#     #
-	#     {% for n in data %}
-	#     <div>{{n}}</div>
-	#     {% endfor %}
-	#
-	context = dict(data = names)
-
-
-	#
-	# render_template looks in the templates/ folder for files.
-	# for example, the below file reads template/index.html
-	#
-	return render_template("index.html", **context)
-
-#
-# This is an example of a different path.  You can see it at:
-# 
-#     localhost:8111/another
-#
-# Notice that the function name is another() rather than index()
-# The functions for each app.route need to have different names
-#
-@app.route('/another')
-def another():
-	return render_template("another.html")'''
-
-'''# Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-	# accessing form inputs from user
-	name = request.form['name']
-	
-	# passing params in for each variable into query
-	params = {}
-	params["new_name"] = name
-	g.conn.execute(text('INSERT INTO test(name) VALUES (:new_name)'), params)
-	g.conn.commit()
-	return redirect('/')
-
 
 @app.route('/login')
 def login():
 	abort(401)
-	this_is_never_executed()'''
+	this_is_never_executed()
 
 
 
@@ -209,29 +110,6 @@ def home():
         # Render the homepage (travel.html)
         return render_template('travel.html',  message="Welcome to Everywhere You Go!")
 
-'''@app.route('/search-destination')
-def search_destination():
-        # Render the page for searching destinations (destination.html)
-        # This might later involve passing search results to the template.
-        return render_template('destination.html')'''
-
-'''@app.route('/view-itinerary')
-def view_itinerary():
-        # Render the page for viewing itineraries (itinerary.html)
-        # This might later involve fetching itineraries from the database and passing them to the template.
-        return render_template('itinerary.html')'''
-
-'''@app.route('/rate-and-review')
-def rate_and_review():
-        # Render the page for rating and reviewing (rate_and_review.html)
-        # This might later involve passing specific itinerary details to the template for review.
-        return render_template('rate_and_review.html')'''
-
-'''@app.route('/get-recommendations', methods=['GET', 'POST'])
-def get_recommendations():
-        # Render the page for getting recommendations (recommendation.html)
-        # This might later involve processing form data (destination and budget) to fetch recommendations.
-        return render_template('recommendation.html')'''
 
 
 
@@ -308,30 +186,6 @@ def view_itinerary():
         itineraries = g.conn.execute(select_query).fetchall()
     return render_template('itinerary.html', itineraries=itineraries)
 
-'''@app.route('/rate-and-review', methods=['GET', 'POST'])
-def rate_and_review():
-    if request.method == 'POST':
-        traveler_id = request.form.get('traveler_id')
-        itinerary_id = request.form.get('itinerary_id')
-        rate = request.form.get('rate')
-        review = request.form.get('review')
-
-        with engine.connect() as conn:
-            insert_query = text("""
-                INSERT INTO rate_and_review (itinerary_id, rate, review)
-                VALUES (:itinerary_id, :rate, :review)
-            """)
-            conn.execute(insert_query, {'itinerary_id': itinerary_id, 'rate': rate, 'review': review})
-            conn.commit()
-        # Redirect to refresh and show the updated list of reviews
-            return redirect('/rate-and-review')
-    
-    reviews = []
-    with engine.connect() as conn:
-        select_query = text("SELECT * FROM rate_and_review ORDER BY review_id DESC")
-        reviews = conn.execute(select_query).fetchall()
-    
-    return render_template('rate_and_review.html', reviews=reviews)'''
 
 @app.route('/rate-and-review', methods=['GET', 'POST'])
 def rate_and_review():
@@ -388,7 +242,7 @@ def is_valid_number(s):
 def get_recommendations():
     destination = request.form['destination'].lower()
     budget = float(request.form['budget']) if is_valid_number(request.form['budget']) else 0 # Ensure budget is treated as a float
-    duration = int(request.form['duration'])
+    duration = int(request.form['duration']) if is_valid_number(request.form['duration']) else 0
 
     # Format the budget as a string with two decimal places
     formatted_budget = "{:.2f}".format(budget)
